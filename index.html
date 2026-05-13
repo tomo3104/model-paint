@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プラモデル塗料対応表｜クレオス・タミヤ・ファレホの色番号をスマホで検索</title>
+  <meta name="description" content="プラモデル塗料の色番号対応表。GSIクレオス（Mr.カラー）・タミヤカラー・ファレホの近似色をスマホで素早く検索。塗料の代替色・互換色を探せます。">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      background: #f4f4f0;
+      color: #1a1a2e;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #2c3e50 0%, #4a5568 100%);
+      color: #e8e8d8;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    .header-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    header h1 { font-size: 1.3rem; font-weight: bold; color: #fff; }
+    header p { font-size: 0.82rem; opacity: 0.8; margin-top: 4px; }
+
+    .ad-slot {
+      background: #e8e8e0; border: 1px dashed #aaa;
+      text-align: center; padding: 12px;
+      margin: 12px 16px; color: #888;
+      font-size: 0.8rem; min-height: 90px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ad-slot-rect { min-height: 250px; }
+
+    .container { max-width: 640px; margin: 0 auto; padding: 0 16px 40px; }
+
+    /* 検索エリア */
+    .search-area {
+      background: white; border: 1px solid #ddd;
+      border-radius: 12px; padding: 16px; margin-top: 16px;
+    }
+    .search-title { font-size: 0.82rem; color: #666; margin-bottom: 12px; }
+
+    .search-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+    .search-row label { font-size: 0.82rem; font-weight: bold; color: #333; min-width: 80px; }
+
+    select, input[type="text"] {
+      flex: 1; padding: 10px 12px;
+      border: 1.5px solid #ccc; border-radius: 6px;
+      font-size: 0.95rem; background: #fafafa;
+      -webkit-appearance: none;
+    }
+    select:focus, input:focus { outline: none; border-color: #4a5568; }
+
+    .search-btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, #2c3e50, #4a5568);
+      color: white; border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: bold; cursor: pointer;
+      margin-top: 4px; letter-spacing: 0.05em;
+    }
+    .search-btn:active { opacity: 0.85; }
+
+    /* 結果エリア */
+    .results { margin-top: 16px; }
+    .result-count { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
+
+    .color-card {
+      background: white; border: 1px solid #ddd;
+      border-radius: 10px; padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .color-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    .color-swatch {
+      width: 40px; height: 40px; border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
+    }
+    .color-main { flex: 1; }
+    .color-name { font-size: 0.95rem; font-weight: bold; color: #1a1a2e; }
+    .color-num { font-size: 0.78rem; color: #666; margin-top: 2px; }
+
+    .equiv-list { border-top: 1px solid #eee; padding-top: 10px; }
+    .equiv-title { font-size: 0.72rem; color: #888; margin-bottom: 6px; }
+    .equiv-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 6px; padding: 6px 8px;
+      background: #f8f8f4; border-radius: 6px;
+    }
+    .equiv-swatch {
+      width: 24px; height: 24px; border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.1); flex-shrink: 0;
+    }
+    .equiv-maker { font-size: 0.72rem; color: #888; min-width: 80px; }
+    .equiv-info { flex: 1; font-size: 0.82rem; color: #333; }
+    .equiv-match {
+      font-size: 0.7rem; padding: 2px 6px;
+      border-radius: 4px; font-weight: bold;
+    }
+    .match-high { background: #d4edda; color: #155724; }
+    .match-mid  { background: #fff3cd; color: #856404; }
+    .match-low  { background: #f8d7da; color: #721c24; }
+
+    .no-result {
+      text-align: center; padding: 32px; color: #888;
+      background: white; border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    /* 凡例 */
+    .legend {
+      display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; }
+
+    .faq-box { background: #f8f8f4; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-top: 16px; }
+    .faq-box h2 { font-size: 1rem; color: #2c3e50; margin-bottom: 16px; }
+    .faq-q { font-weight: bold; color: #4a5568; font-size: 0.9rem; margin-bottom: 6px; }
+    .faq-a { font-size: 0.82rem; color: #555; line-height: 1.7; margin-bottom: 16px; }
+
+    .note-box {
+      background: #fff8dc; border: 1px solid #ddd;
+      border-radius: 8px; padding: 12px 14px;
+      margin-top: 12px; font-size: 0.78rem; color: #666;
+    }
+
+    footer {
+      background: #2c3e50; color: #aaa;
+      text-align: center; padding: 20px;
+      font-size: 0.75rem; margin-top: 32px;
+    }
+    footer a { color: #aaa; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-icon">🎨</div>
+  <h1>プラモデル塗料対応表</h1>
+  <p>クレオス・タミヤ・ファレホの近似色を検索</p>
+</header>
+
+<div style="max-width:640px; margin:0 auto;">
+  <div class="ad-slot"><!-- AdSense -->広告</div>
+</div>
+
+<div class="container">
+
+  <!-- 検索 -->
+  <div class="search-area">
+    <div class="search-title">色名・番号・メーカーで検索できます</div>
+
+    <div class="search-row">
+      <label>メーカー</label>
+      <select id="s_maker">
+        <option value="all">すべて</option>
+        <option value="mr">クレオス Mr.カラー</option>
+        <option value="tamiya_a">タミヤ アクリル</option>
+        <option value="tamiya_l">タミヤ ラッカー</option>
+        <option value="vallejo">ファレホ</option>
+      </select>
+    </div>
+
+    <div class="search-row">
+      <label>色名・番号</label>
+      <input type="text" id="s_query" placeholder="例：ホワイト、C1、XF-2..." oninput="searchPaints()">
+    </div>
+
+    <button class="search-btn" onclick="searchPaints()">🎨 検索する</button>
+  </div>
+
+  <!-- 凡例 -->
+  <div class="legend" style="margin-top:12px;">
+    <div class="legend-item"><span class="equiv-match match-high">近似</span>ほぼ同じ色</div>
+    <div class="legend-item"><span class="equiv-match match-mid">類似</span>似た色味</div>
+    <div class="legend-item"><span class="equiv-match match-low">参考</span>参考程度</div>
+  </div>
+
+  <!-- 結果 -->
+  <div class="results" id="results">
+    <div class="no-result">
+      色名や番号を入力して検索してください<br>
+      <small>例：ホワイト / C1 / XF-1 / White</small>
+    </div>
+  </div>
+
+  <div class="note-box">
+    ⚠️ 掲載している対応色はあくまで近似色です。完全に同じ色ではありません。実際の発色はロット・希釈具合によって異なります。重要な作品は実際に塗り比べてご確認ください。
+  </div>
+
+  <!-- よくある質問 -->
+  <div class="faq-box">
+    <h2>よくある質問</h2>
+
+    <p class="faq-q">Q. クレオスとタミヤの塗料は混ぜて使える？</p>
+    <p class="faq-a">A. 基本的には同じ系統（ラッカー同士、アクリル同士）であれば混ぜることができます。ただしメーカーが異なると溶剤の相性が悪い場合があるため、少量で試してから使うことをおすすめします。</p>
+
+    <p class="faq-q">Q. Mr.カラーの代わりにタミヤカラーを使いたい</p>
+    <p class="faq-a">A. 多くの基本色には近似色が存在します。このツールで色名や番号を検索すると代替候補が確認できます。ただし完全に同じ色ではないため、目立つ部分での使用は実際に色を確認してください。</p>
+
+    <p class="faq-q">Q. ファレホとは何ですか？</p>
+    <p class="faq-a">A. スペインのAKインタラクティブ社が製造する水性塗料ブランドです。発色が良く、筆塗りに適しており、フィギュア塗装で人気があります。クレオスやタミヤとの近似色も多数あります。</p>
+
+    <p class="faq-q">Q. 掲載されていない色を知りたい</p>
+    <p class="faq-a" style="margin-bottom:0;">A. 現在データを随時追加中です。基本的なカラーから順次対応しています。</p>
+  </div>
+
+</div>
+
+<div style="max-width:640px; margin:0 auto; padding:0 16px;">
+  <div class="ad-slot ad-slot-rect"><!-- AdSense -->広告</div>
+</div>
+
+<footer>
+  <p>プラモデル塗料対応表 | クレオス・タミヤ・ファレホの近似色を検索</p>
+  <p style="margin-top:4px;">© 2026 プラモデル塗料対応表 | <a href="privacy.html">プライバシーポリシー</a></p>
+</footer>
+
+<script>
+// 塗料データベース（主要カラー）
+const PAINTS = [
+  { id:1, name:'ホワイト', hex:'#FFFFFF',
+    mr:{num:'C1', name:'ホワイト'}, tamiya_a:{num:'XF-2', name:'フラットホワイト', match:'近似'}, tamiya_l:{num:'LP-62', name:'フラットホワイト', match:'近似'}, vallejo:{num:'70.951', name:'White', match:'近似'} },
+  { id:2, name:'ブラック', hex:'#1a1a1a',
+    mr:{num:'C2', name:'ブラック'}, tamiya_a:{num:'XF-1', name:'フラットブラック', match:'近似'}, tamiya_l:{num:'LP-6', name:'セミグロスブラック', match:'類似'}, vallejo:{num:'70.950', name:'Black', match:'近似'} },
+  { id:3, name:'レッド', hex:'#CC0000',
+    mr:{num:'C3', name:'レッド'}, tamiya_a:{num:'X-7', name:'レッド', match:'近似'}, tamiya_l:{num:'LP-47', name:'クリアレッド', match:'参考'}, vallejo:{num:'70.926', name:'Red', match:'近似'} },
+  { id:4, name:'イエロー', hex:'#FFD700',
+    mr:{num:'C4', name:'イエロー'}, tamiya_a:{num:'X-8', name:'レモンイエロー', match:'類似'}, tamiya_l:{num:'LP-48', name:'クリアイエロー', match:'参考'}, vallejo:{num:'70.952', name:'Lemon Yellow', match:'類似'} },
+  { id:5, name:'ブルー', hex:'#0033CC',
+    mr:{num:'C5', name:'ブルー'}, tamiya_a:{num:'X-4', name:'ブルー', match:'近似'}, tamiya_l:{num:'LP-22', name:'レーシングブルー', match:'類似'}, vallejo:{num:'70.925', name:'Blue', match:'近似'} },
+  { id:6, name:'グリーン', hex:'#006600',
+    mr:{num:'C6', name:'グリーン'}, tamiya_a:{num:'XF-5', name:'フラットグリーン', match:'近似'}, tamiya_l:{num:'LP-28', name:'フラットグリーン', match:'近似'}, vallejo:{num:'70.970', name:'Deep Green', match:'類似'} },
+  { id:7, name:'オレンジ', hex:'#FF8000',
+    mr:{num:'C8', name:'オレンジ'}, tamiya_a:{num:'X-6', name:'オレンジ', match:'近似'}, tamiya_l:{num:'LP-46', name:'クリアオレンジ', match:'参考'}, vallejo:{num:'70.981', name:'Orange Brown', match:'類似'} },
+  { id:8, name:'シルバー', hex:'#C0C0C0',
+    mr:{num:'C8', name:'シルバー'}, tamiya_a:{num:'X-11', name:'クロームシルバー', match:'近似'}, tamiya_l:{num:'LP-11', name:'クロームシルバー', match:'近似'}, vallejo:{num:'70.997', name:'Silver', match:'近似'} },
+  { id:9, name:'ゴールド', hex:'#D4AF37',
+    mr:{num:'C9', name:'ゴールド'}, tamiya_a:{num:'X-12', name:'ゴールドリーフ', match:'近似'}, tamiya_l:{num:'LP-12', name:'ゴールド', match:'近似'}, vallejo:{num:'70.996', name:'Gold', match:'近似'} },
+  { id:10, name:'フラットブラウン', hex:'#7B3F00',
+    mr:{num:'C22', name:'ダルレッド'}, tamiya_a:{num:'XF-10', name:'フラットブラウン', match:'類似'}, tamiya_l:{num:'LP-29', name:'フラットブラウン', match:'近似'}, vallejo:{num:'70.984', name:'Flat Brown', match:'近似'} },
+  { id:11, name:'カーキ', hex:'#8B8000',
+    mr:{num:'C55', name:'カーキ'}, tamiya_a:{num:'XF-49', name:'カーキ', match:'近似'}, tamiya_l:{num:'LP-53', name:'カーキ', match:'近似'}, vallejo:{num:'70.988', name:'Khaki', match:'近似'} },
+  { id:12, name:'グレー', hex:'#808080',
+    mr:{num:'C13', name:'ニュートラルグレー'}, tamiya_a:{num:'XF-22', name:'RLMグレー', match:'類似'}, tamiya_l:{num:'LP-7', name:'グレー', match:'近似'}, vallejo:{num:'70.992', name:'Neutral Grey', match:'近似'} },
+  { id:13, name:'スカイブルー', hex:'#87CEEB',
+    mr:{num:'C65', name:'インタミアブルー'}, tamiya_a:{num:'XF-23', name:'ライトブルー', match:'類似'}, tamiya_l:{num:'LP-74', name:'スカイブルー', match:'近似'}, vallejo:{num:'70.961', name:'Sky Blue', match:'近似'} },
+  { id:14, name:'クリアレッド', hex:'#FF000088',
+    mr:{num:'C47', name:'クリアレッド'}, tamiya_a:{num:'X-27', name:'クリアレッド', match:'近似'}, tamiya_l:{num:'LP-47', name:'クリアレッド', match:'近似'}, vallejo:{num:'70.934', name:'Transparent Red', match:'近似'} },
+  { id:15, name:'マホガニー', hex:'#C04000',
+    mr:{num:'C42', name:'マホガニー'}, tamiya_a:{num:'XF-64', name:'レッドブラウン', match:'類似'}, tamiya_l:{num:'LP-25', name:'マホガニー', match:'近似'}, vallejo:{num:'70.846', name:'Mahogany Brown', match:'近似'} },
+  { id:16, name:'ホワイトグレー', hex:'#E8E8E0',
+    mr:{num:'C35', name:'明灰白色'}, tamiya_a:{num:'XF-12', name:'Jネービーグレー', match:'参考'}, tamiya_l:{num:'LP-38', name:'ライトグレー', match:'類似'}, vallejo:{num:'70.993', name:'White Grey', match:'近似'} },
+  { id:17, name:'ダークグリーン', hex:'#006400',
+    mr:{num:'C18', name:'ダークグリーン'}, tamiya_a:{num:'XF-61', name:'ダークグリーン', match:'近似'}, tamiya_l:{num:'LP-70', name:'ダークグリーン', match:'近似'}, vallejo:{num:'70.968', name:'Dark Green', match:'近似'} },
+  { id:18, name:'フラットレッド', hex:'#CC3333',
+    mr:{num:'C29', name:'オレンジレッド'}, tamiya_a:{num:'XF-7', name:'フラットレッド', match:'近似'}, tamiya_l:{num:'LP-23', name:'ブライトレッド', match:'類似'}, vallejo:{num:'70.926', name:'Red', match:'近似'} },
+  { id:19, name:'サンドイエロー', hex:'#C8A850',
+    mr:{num:'C39', name:'ダークイエロー'}, tamiya_a:{num:'XF-60', name:'ダークイエロー', match:'近似'}, tamiya_l:{num:'LP-17', name:'サンドイエロー', match:'近似'}, vallejo:{num:'70.978', name:'Dark Yellow', match:'近似'} },
+  { id:20, name:'プライマー', hex:'#B0A090',
+    mr:{num:'B524', name:'サーフェイサー1000'}, tamiya_a:{num:'87026', name:'ファインサーフェイサー', match:'近似'}, tamiya_l:{num:'', name:'（ラッカー系なし）', match:'参考'}, vallejo:{num:'70.601', name:'Surface Primer', match:'類似'} },
+];
+
+let currentResults = [];
+
+function searchPaints() {
+  const query = document.getElementById('s_query').value.toLowerCase().trim();
+  const maker = document.getElementById('s_maker').value;
+
+  let results = PAINTS;
+
+  if (query) {
+    results = results.filter(p => {
+      const nameMatch = p.name.toLowerCase().includes(query);
+      const mrMatch   = p.mr && (p.mr.num.toLowerCase().includes(query) || p.mr.name.toLowerCase().includes(query));
+      const taMatch   = p.tamiya_a && (p.tamiya_a.num.toLowerCase().includes(query) || p.tamiya_a.name.toLowerCase().includes(query));
+      const tlMatch   = p.tamiya_l && (p.tamiya_l.num.toLowerCase().includes(query) || p.tamiya_l.name.toLowerCase().includes(query));
+      const vaMatch   = p.vallejo && (p.vallejo.num.toLowerCase().includes(query) || p.vallejo.name.toLowerCase().includes(query));
+      return nameMatch || mrMatch || taMatch || tlMatch || vaMatch;
+    });
+  }
+
+  renderResults(results, maker);
+}
+
+function renderResults(results, makerFilter) {
+  const container = document.getElementById('results');
+
+  if (results.length === 0) {
+    container.innerHTML = '<div class="no-result">該当する塗料が見つかりませんでした。<br><small>別のキーワードで試してください。</small></div>';
+    return;
+  }
+
+  const makerNames = { mr:'クレオス Mr.カラー', tamiya_a:'タミヤ アクリル', tamiya_l:'タミヤ ラッカー', vallejo:'ファレホ' };
+
+  let html = `<div class="result-count">${results.length}件見つかりました</div>`;
+
+  results.forEach(p => {
+    const makers = ['mr','tamiya_a','tamiya_l','vallejo'];
+    let equivHtml = '';
+
+    makers.forEach(m => {
+      if (!p[m] || !p[m].num) return;
+      if (makerFilter !== 'all' && makerFilter !== m) return;
+
+      const match     = p[m].match || '近似';
+      const matchClass = match==='近似' ? 'match-high' : match==='類似' ? 'match-mid' : 'match-low';
+
+      equivHtml += `
+        <div class="equiv-row">
+          <div class="equiv-swatch" style="background:${p.hex}"></div>
+          <div class="equiv-maker">${makerNames[m]}</div>
+          <div class="equiv-info">${p[m].num} ${p[m].name}</div>
+          <span class="equiv-match ${matchClass}">${match}</span>
+        </div>`;
+    });
+
+    if (!equivHtml) return;
+
+    html += `
+      <div class="color-card">
+        <div class="color-header">
+          <div class="color-swatch" style="background:${p.hex}"></div>
+          <div class="color-main">
+            <div class="color-name">${p.name}</div>
+            <div class="color-num">${p.mr ? p.mr.num + ' ' + p.mr.name : ''}</div>
+          </div>
+        </div>
+        <div class="equiv-list">
+          <div class="equiv-title">近似色・対応色</div>
+          ${equivHtml}
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// 初期表示（全件）
+searchPaints();
+</script>
+</body>
+</html>
